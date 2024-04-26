@@ -22,7 +22,7 @@ const postSchema = new Schema({
         type: String,
         enum: ["Published", "Not Published"],
         default: "Not Published",
-        required: true;
+        required: true
     }
 })
 
