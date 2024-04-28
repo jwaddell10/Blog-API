@@ -3,6 +3,9 @@ const router = express.Router();
 const Post = require("../models/post");
 const Comment = require("../models/comment");
 const postController = require("../controllers/postController");
+const authController = require("../controllers/authController")
+const userController = require("../controllers/userController")
+const commentController = require("../controllers/commentController")
 
 //one for whole collection, one for single object
 
@@ -18,7 +21,25 @@ router.get("/", function (req, res, next) {
 	res.render("index", { title: "Express" });
 });
 
+// router.get("/login", authController.loginGet);
+// router.post("/login", authController.loginPost);
+
+// router.get("/logout", authController.logout);
+
+// router.get("/signup", authController.signupGet);
+// router.post("/signup", authController.signupPost);
+
 router.get("/post", postController.postGet);
-router.post("/post", postController.postPost)
+router.post("/post", postController.postPost);
+
+router.get('/users', userController.userGetAll);
+router.get('/users/:userId', userController.userGetOne);
+
+router.get('/comments', commentController.commentGetAll);
+router.get("/comments/:commentId", commentController.commentGetOne);
+router.post("/comments", commentController.commentPost);
+router.delete("/comments/:commentId", commentController.commentDelete);
+
+
 
 module.exports = router;
