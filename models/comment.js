@@ -18,8 +18,8 @@ const commentSchema = new Schema({
 	},
 });
 
-commentSchema.virtual("date_formatted").get(function() {
-    return DateTime.fromJSDate(this.date).toLocaleString(DateTime.DATE_MED);
+commentSchema.virtual("date_formatted").get(function () {
+	return DateTime.fromJSDate(this.date).toLocaleString(DateTime.DATE_MED);
 });
 
-module.exports = mongoose.model("Comment", commentSchema)
+module.exports = mongoose.model("Comment", commentSchema);

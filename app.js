@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const secret = "secretKey"
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 
@@ -35,8 +34,7 @@ app.post("/api/login", (req, res) => {
       password: "jon@gmail.com",
   };
 
-  jwt.sign({ user }, secret, (err, token) => {
-    console.log(token, 'this is token')
+  jwt.sign({ user }, "secretkey", (err, token) => {
       res.json({
           message: "Auth passed",
           token,
@@ -45,8 +43,7 @@ app.post("/api/login", (req, res) => {
 }); 
 
 app.post("/api/posts", verifyToken, (req, res) => {
-  jwt.verify(req.token, secret, (err, authData) => {
-    console.log(req.token, 'this is reqtoken', err, 'this is error', authData, 'this is authdata')
+  jwt.verify(req.token, "secretkey", (err, authData) => {
       if (err) {
           throw new Error("error");
       } else {
@@ -73,7 +70,6 @@ function verifyToken(req, res, next) {
     next();
   } else {
     // Forbidden
-    console.log(bearerHeader, "this is bearer header");
     throw new Error("Forbidden");
   }
 }
