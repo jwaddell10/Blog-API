@@ -6,17 +6,17 @@ require("dotenv").config();
 const asyncHandler = require("express-async-handler");
 
 exports.commentGetAll = asyncHandler(async (req, res, next) => {
-    res.send("commentGetAll is working")
+    res.json("commentGetAll is working")
 })
 
 exports.commentGetOne = asyncHandler(async (req, res, next) => {
-    res.send("commentGetONe is working")
+    res.json("commentGetONe is working")
 })
 
 exports.commentPost = asyncHandler(async (req, res, next) => {
-    res.send("comment post is working")
+    res.json("comment post is working")
 })
 
 exports.commentDelete = asyncHandler(async (req, res, next) => {
-    res.send("comment delete is working")
+    res.json("comment delete is working")
 })
