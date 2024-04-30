@@ -21,6 +21,7 @@ async function main() {
 }
 
 app.get("/api", (req, res) => {
+  console.log('is this working')
   res.json({
       message: "Welcome to the API",
   });
