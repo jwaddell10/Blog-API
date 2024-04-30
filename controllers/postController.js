@@ -6,7 +6,6 @@ require("dotenv").config();
 const asyncHandler = require("express-async-handler");
 
 exports.postGet = asyncHandler(async (req, res, next) => {
-	//get all posts, render them to page, res.send
 	try {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
@@ -15,14 +14,11 @@ exports.postGet = asyncHandler(async (req, res, next) => {
 		const allPosts = await Post.find({}).populate("user").exec();
 		console.log(allPosts, "this is all Posts");
 
-		res.render("Posts", {
-			title: "Posts",
-			allPosts: allPosts,
-		});
+		res.send(allPosts);
 	} catch (error) {
 		console.log(error);
 	}
-	// res.send(allPosts);
+	res.send(allPosts);
 });
 
 exports.postPost = [

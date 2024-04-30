@@ -6,7 +6,7 @@ require("dotenv").config();
 const asyncHandler = require("express-async-handler");
 
 exports.userGetAll = asyncHandler(async (req, res, next) => {
-    res.send("userGetAll is working")
+	res.send("NOT IMPLEMENTED: userGetAll");
 })
 
 exports.userGetOne = asyncHandler(async (req, res, next) => {

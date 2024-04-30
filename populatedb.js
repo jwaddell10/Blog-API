@@ -4,9 +4,6 @@ const User = require("./models/user");
 const Post = require("./models/post");
 require("dotenv").config();
 
-mongoose.set("strictQuery", false);
-const mongoDB = process.env.MONGODB_URI;
-
 const comments = [];
 const posts = [];
 const users = [];
@@ -14,15 +11,15 @@ const users = [];
 main().catch((err) => console.log(err));
 
 async function main() {
+	const mongoDB = process.env.MONGODB_URI;
 	await mongoose.connect(mongoDB);
 	console.log("Should be connected");
-	console.log("is this running?");
 
 	await Promise.all([Post.deleteMany(), User.deleteMany()]);
-	await createUsers();
-	console.log("user created");
+    await createUsers();
+    console.log('user created')
 	await createPosts();
-	console.log("posts created");
+    console.log('posts created')
 }
 
 async function postCreate(index, title, date, text, user, visibility) {
