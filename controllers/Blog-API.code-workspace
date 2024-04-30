@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../Members-Only"
+		},
+		{
+			"path": "../../Inventory-Application"
+		}
+	],
+	"settings": {}
+}

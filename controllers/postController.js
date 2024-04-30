@@ -7,9 +7,22 @@ const asyncHandler = require("express-async-handler");
 
 exports.postGet = asyncHandler(async (req, res, next) => {
 	//get all posts, render them to page, res.send
-	const allPosts = await Post.find({}).exec();
-	console.log(allPosts, "this is all Posts");
-	res.send(allPosts);
+	try {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: errors.array() });
+		}
+		const allPosts = await Post.find({}).populate("user").exec();
+		console.log(allPosts, "this is all Posts");
+
+		res.render("Posts", {
+			title: "Posts",
+			allPosts: allPosts,
+		});
+	} catch (error) {
+		console.log(error);
+	}
+	// res.send(allPosts);
 });
 
 exports.postPost = [
@@ -22,10 +35,10 @@ exports.postPost = [
 			if (!errors.isEmpty()) {
 				return res.status(400).json({ errors: errors.array() });
 			}
-            console.log(req.user, 'this is requser')
-            const formattedDate = new Date().toISOString();
-            const user = await User.findById(req.user)
-        } catch (error) {
+			console.log(req.user, "this is requser");
+			const formattedDate = new Date().toISOString();
+			const user = await User.findById(req.user);
+		} catch (error) {
 			console.log(error);
 		}
 	}),
