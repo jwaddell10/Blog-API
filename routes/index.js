@@ -18,6 +18,7 @@ const commentController = require("../controllers/commentController")
 //get a single comment
 /* GET home page. */
 router.get("/", function (req, res, next) {
+	// res.render("index", { title: "Express" });
 	res.json({ key: "value" });
 });
 
@@ -26,8 +27,8 @@ router.get("/", function (req, res, next) {
 
 // router.get("/logout", authController.logout);
 
-// router.get("/signup", authController.signupGet);
-// router.post("/signup", authController.signupPost);
+router.get("/signup", authController.signupGet);
+router.post("/signup", authController.signupPost);
 
 router.get("/post", postController.postGet);
 router.post("/post", postController.postPost);

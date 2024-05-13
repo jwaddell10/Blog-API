@@ -12,13 +12,11 @@ exports.postGet = asyncHandler(async (req, res, next) => {
 			return res.status(400).json({ errors: errors.array() });
 		}
 		const allPosts = await Post.find({}).populate("user").exec();
-		console.log(allPosts, "this is all Posts");
 
-		res.send(allPosts);
+		res.json(allPosts);
 	} catch (error) {
 		console.log(error);
 	}
-	res.send(allPosts);
 });
 
 exports.postPost = [
