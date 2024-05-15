@@ -55,7 +55,6 @@ exports.signupPost = [
 	asyncHandler(async (req, res, next) => {
 		const name = req.body.formDataObject.name;
 		try {
-			console.log("this code runs");
 			bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
 				if (err) {
 					throw new Error("User could not be created");
