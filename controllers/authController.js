@@ -19,9 +19,12 @@ exports.signupGet = asyncHandler(async (req, res, next) => {
 });
 
 exports.signupPost = [
+	//doesn't check password properly***
+
 	// console.log(req.body.formDataObject, "this is reqbody");
 	// //take request body, let usersign in, sanitize password?
 	asyncHandler(async (req, res, next) => {
+		console.log(req.body.formDataObject.password, "this is password");
 		const name = req.body.formDataObject.name;
 		try {
 			const duplicate = await User.findOne({ name: name });
@@ -41,18 +44,23 @@ exports.signupPost = [
 		.isAlphanumeric()
 		.withMessage("Username can only contain letters and numbers")
 		.escape(),
-	body("password", "You must enter a password").trim().notEmpty().escape(),
-	body("confirm-password")
+	body("password", "You must enter a password")
 		.trim()
-		.isLength({ min: 1 })
-		.custom((value) => {
-			console.log(value, "this is value in authcontroller");
-			if (value !== req.body.formDataObject.password) {
-				throw new Error("Passwords do not match");
-			}
-		})
+		.notEmpty()
+		.matches("passwordConfirmation")
 		.escape(),
+	body("passwordConfirmation", "You must enter a password")
+		.matches("password")
+		// .custom((value) => {
+		// 	if (value !== req.body.formDataObject.password) {
+		// 		throw new Error("Passwords do not match");
+		// 	}
+		// })
+		.escape(),
+
 	asyncHandler(async (req, res, next) => {
+		const errors = validationResult(req);
+
 		const name = req.body.formDataObject.name;
 		try {
 			bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
