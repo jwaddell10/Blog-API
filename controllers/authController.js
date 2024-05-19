@@ -16,15 +16,15 @@ const asyncHandler = require("express-async-handler");
 // const checkForDuplicateUserName = asyncHandler(async (req, res, next) => {
 // 	console.log(req.body, "this is reqbody");
 // 	const name = req.body.formDataObject.name;
-  
+
 // 	try {
 // 	  const duplicate = await User.findOne({ name: name });
 // 	  console.log(duplicate, "this is duplicate");
-  
+
 // 	  if (duplicate !== null) {
 // 		return res.status(404).json({ message: "User already exists" });
 // 	  }
-  
+
 // 	  // If no duplicate user is found, call next() to continue the request flow
 // 	  next();
 // 	} catch (error) {
@@ -49,54 +49,48 @@ exports.signupGet = asyncHandler(async (req, res, next) => {
 });
 
 exports.signupPost = [
-	//doesn't check password properly***
-
-	// console.log(req.body.formDataObject, "this is reqbody");
-	// //take request body, let usersign in, sanitize password?
-	// checkForDuplicateUserName(),
-	// checkForDuplicatePassword(),
-
 	body("name", "You must enter a username")
 		.trim()
 		.notEmpty()
-		.isAlphanumeric()
-		.custom(async (req) => {
-			const name = req.body.name;
-			const existingUser = await User.findOne(name);
-			console.log(existingUser, "this is existinguser");
-			if (existingUser) {
+		.custom(async (name) => {
+			const existingUser = await User.findOne({ name: name });
+			if (existingUser !== null) {
 				throw new Error("User already exists");
 			}
 		})
-		.withMessage("Username can only contain letters and numbers")
 		.escape(),
-	body("password", "You must enter a password").trim().notEmpty().escape(),
+	body("password", "You must enter a password")
+		.trim()
+		.isLength({ min: 5 })
+		.escape(),
 	body("passwordConfirmation", "You must enter a password")
-		.custom((value, {req}) => {
-			console.log(value, 'this is value password field')
-			return value = req.body.formDataObject.password
+		.custom((confirmPasswordField, { req }) => {
+			const currentPasswordField = req.body.password;
+			if (confirmPasswordField !== currentPasswordField) {
+				throw new Error("Passwords do not match");
+			}
+			return true;
 		})
 		.escape(),
 
-	// asyncHandler(async (req, res, next) => {
-	// 	const errors = validationResult(req);
+	asyncHandler(async (req, res, next) => {
+		const errors = validationResult(req);
 
-	// 	const name = req.body.formDataObject.name;
-	// 	try {
-	// 		bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
-	// 			if (err) {
-	// 				throw new Error("User could not be created");
-	// 			}
-	// 			const user = new User({
-	// 				name: name,
-	// 				password: hashedPassword,
-	// 			});
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: errors.array() });
+		}
 
-	// 			await user.save();
-	// 			res.redirect("/");
-	// 		});
-	// 	} catch (error) {
-	// 		next(error);
-	// 	}
-	// }),
+		const name = req.body.name;
+		try {
+			const hashedPassword = await bcrypt.hash(req.body.password, 10);
+			const user = new User({
+				name: name,
+				password: hashedPassword,
+			});
+
+			await user.save();
+		} catch (error) {
+			next(error);
+		}
+	}),
 ];
