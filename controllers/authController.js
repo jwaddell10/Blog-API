@@ -3,6 +3,7 @@ const Comment = require("../models/comment"); //may not need this
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const Post = require("../models/post");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const asyncHandler = require("express-async-handler");
 
@@ -13,36 +14,61 @@ const asyncHandler = require("express-async-handler");
 
 // router.get("/signup", authController.signupGet);
 // router.post("/signup", authController.signupPost);
-// const checkForDuplicateUserName = asyncHandler(async (req, res, next) => {
-// 	console.log(req.body, "this is reqbody");
-// 	const name = req.body.formDataObject.name;
 
-// 	try {
-// 	  const duplicate = await User.findOne({ name: name });
-// 	  console.log(duplicate, "this is duplicate");
+exports.loginGet = asyncHandler(async (req, res, next) => {
+	res.send("not implemented, loginget");
+});
 
-// 	  if (duplicate !== null) {
-// 		return res.status(404).json({ message: "User already exists" });
-// 	  }
+exports.loginPost = [
+	//check username and password fields
+	//check if user exists
+	body("name", "Must enter a username").trim().isLength({ min: 5 }).escape(),
+	body("password", "Must enter a password")
+		.trim()
+		.isLength({ min: 5 })
+		.escape(),
 
-// 	  // If no duplicate user is found, call next() to continue the request flow
-// 	  next();
-// 	} catch (error) {
-// 	  // If an error occurs, pass it to the next error handling middleware
-// 	  next(error);
-// 	}
-//   });
-// const checkForDuplicatePassword = asyncHandler(async (req, res, next) => {
-// 	const password = req.body.formDataObject.password
-// 	const passwordConfirmation = req.body.formDataObject.passwordConfirmation
+	asyncHandler(async (req, res, next) => {
+		//check if user exists
+		try {
+			const errors = validationResult(req);
 
-// 	if (password !== passwordConfirmation) {
-// 		throw new Error('Passwords do not match');
-// 	} else {
-// 		console.log('they match');
-// 		return true;
-// 	}
-// })
+			if (!errors.isEmpty()) {
+				res.json({
+					name: req.body.name,
+					errorMessage: errors.array(),
+				});
+				return;
+			}
+
+			const user = await User.find({
+				name: req.body.name,
+				password: req.body.password,
+			});
+
+			console.log(user, 'this is user')
+
+			if (user !== null) {
+				jwt.sign({ user }, process.env.JWT_SECRET, (err, token) => {
+					if (err) {
+						console.log(err, 'this is err')
+					}
+					res.json({
+						token,
+					});
+				});
+			} 
+			debugger;
+
+			if (!user) {
+				console.log('no user')
+			}
+			
+		} catch (error) {
+			next(error);
+		}
+	}),
+];
 
 exports.signupGet = asyncHandler(async (req, res, next) => {
 	res.send("not implemented, signupGet");

@@ -5,8 +5,12 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const User = require("./models/user");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
+// import { Strategy as JwtStrategy } from 'passport-jwt';
 
 const app = express();
 require("dotenv").config({ path: ".env" });
@@ -21,41 +25,35 @@ async function main() {
 	console.log("connected");
 }
 
-app.get("/api", (req, res) => {
-  console.log('is this working')
-  res.json({
-      message: "Welcome to the API",
-  });
-});
+// app.get("/", (req, res) => {
+//   console.log('is this working')
+//   res.json({
+//       message: "Welcome to the API",
+//   });
+// });
 
-app.post("/api/login", (req, res) => {
-  // mock user
-  const user = {
-      id: 1,
-      username: "jonathan",
-      password: "jon@gmail.com",
-  };
+// app.post("/login", (req, res) => {
+//   // mock user
+//   jwt.sign({ user }, "secretkey", (err, token) => {
+//       res.json({
+//           message: "Auth passed",
+//           token,
+//       });  
+//   });
+// }); 
 
-  jwt.sign({ user }, "secretkey", (err, token) => {
-      res.json({
-          message: "Auth passed",
-          token,
-      });
-  });
-}); 
-
-app.post("/api/posts", verifyToken, (req, res) => {
-  jwt.verify(req.token, "secretkey", (err, authData) => {
-      if (err) {
-          throw new Error("error");
-      } else {
-          res.json({
-              message: "Post created",
-              authData,
-          });
-      }
-  });
-});
+// app.post("/api/posts", verifyToken, (req, res) => {
+//   jwt.verify(req.token, "secretkey", (err, authData) => {
+//       if (err) {
+//           throw new Error("error");
+//       } else {
+//           res.json({
+//               message: "Post created",
+//               authData,
+//           });
+//       }
+//   });
+// });
 
 //verify token
 function verifyToken(req, res, next) {
@@ -75,6 +73,30 @@ function verifyToken(req, res, next) {
     throw new Error("Forbidden");
   }
 }
+
+// passport.use(
+// 	new LocalStrategy(async (name, password, done) => {
+// 		try {
+//       console.log('is this running?')
+// 			const user = await User.findOne({ name: name });
+// 			if (!user) {
+// 				return done(null, false, {
+// 					message: "Incorrect username",
+// 				});
+// 			}
+// 			const match = await bcrypt.compare(password, user.password);
+// 			if (!match) {
+// 				// passwords do not match!
+// 				return done(null, false, {
+// 					message: "Incorrect password",
+// 				});
+// 			}
+// 			return done(null, user);
+// 		} catch (err) {
+// 			return done(err);
+// 		}
+// 	})
+// );
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

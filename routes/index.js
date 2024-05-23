@@ -23,7 +23,7 @@ router.get("/", function (req, res, next) {
 });
 
 // router.get("/login", authController.loginGet);
-// router.post("/login", authController.loginPost);
+router.post("/login", authController.loginPost);
 
 // router.get("/logout", authController.logout);
 
