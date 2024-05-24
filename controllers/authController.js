@@ -22,10 +22,10 @@ exports.loginGet = asyncHandler(async (req, res, next) => {
 exports.loginPost = [
 	//check username and password fields
 	//check if user exists
-	body("name", "Must enter a username").trim().isLength({ min: 5 }).escape(),
+	body("name", "Must enter a username").trim().isLength({ min: 1 }).escape(),
 	body("password", "Must enter a password")
 		.trim()
-		.isLength({ min: 5 })
+		.isLength({ min: 1 })
 		.escape(),
 
 	asyncHandler(async (req, res, next) => {
@@ -58,7 +58,7 @@ exports.loginPost = [
 			}
 
 			if (user.length === 0) {
-				res.json({ message: 'No user' })
+				res.json({ message: 'Incorrect username or password' })
 			}
 		} catch (error) {
 			next(error);
