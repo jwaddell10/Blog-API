@@ -46,24 +46,20 @@ exports.loginPost = [
 				password: req.body.password,
 			});
 
-			console.log(user, 'this is user')
-
-			if (user !== null) {
+			if (user.length !== 0) {
 				jwt.sign({ user }, process.env.JWT_SECRET, (err, token) => {
 					if (err) {
-						console.log(err, 'this is err')
+						console.log(err, "this is err");
 					}
 					res.json({
 						token,
 					});
 				});
-			} 
-			debugger;
-
-			if (!user) {
-				console.log('no user')
 			}
-			
+
+			if (user.length === 0) {
+				res.json({ message: 'No user' })
+			}
 		} catch (error) {
 			next(error);
 		}
