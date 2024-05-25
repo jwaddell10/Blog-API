@@ -6,7 +6,7 @@ const postController = require("../controllers/postController");
 const authController = require("../controllers/authController")
 const userController = require("../controllers/userController")
 const commentController = require("../controllers/commentController")
-
+const passport = require("passport");
 //one for whole collection, one for single object
 
 //create a blog post POST

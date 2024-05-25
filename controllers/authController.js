@@ -1,5 +1,6 @@
 const { body, validationResult } = require("express-validator");
 const Comment = require("../models/comment"); //may not need this
+const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const Post = require("../models/post");
@@ -20,8 +21,7 @@ exports.loginGet = asyncHandler(async (req, res, next) => {
 });
 
 exports.loginPost = [
-	//check username and password fields
-	//check if user exists
+	// Check username and password fields
 	body("name", "Must enter a username").trim().isLength({ min: 1 }).escape(),
 	body("password", "Must enter a password")
 		.trim()
@@ -29,7 +29,6 @@ exports.loginPost = [
 		.escape(),
 
 	asyncHandler(async (req, res, next) => {
-		//check if user exists
 		try {
 			const errors = validationResult(req);
 
@@ -41,12 +40,21 @@ exports.loginPost = [
 				return;
 			}
 
-			const user = await User.find({
-				name: req.body.name,
-				password: req.body.password,
-			});
+			const user = await User.findOne({ name: req.body.name });
+			console.log(user, 'this is user')
 
-			if (user.length !== 0) {
+			if (!user) {
+				return res.json({ message: "Incorrect username or password" });
+			}
+
+			const isMatch = await bcrypt.compare(
+				req.body.password,
+				user.password
+			);
+
+			if (isMatch) {
+				return res.json({ message: "Incorrect username or password" });
+			} else if (!isMatch) {
 				jwt.sign({ user }, process.env.JWT_SECRET, (err, token) => {
 					if (err) {
 						console.log(err, "this is err");
@@ -55,10 +63,6 @@ exports.loginPost = [
 						token,
 					});
 				});
-			}
-
-			if (user.length === 0) {
-				res.json({ message: 'Incorrect username or password' })
 			}
 		} catch (error) {
 			next(error);
