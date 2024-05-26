@@ -26,7 +26,6 @@ exports.postPost = [
 	body("text").trim().isLength({ min: 1 }).escape(),
 
 	asyncHandler(async (req, res, next) => {
-		console.log(req.token, 'this is req token')
 		jwt.verify(req.token, process.env.JWT_SECRET, (err, authData) => {
 			if (err) {
 				res.sendStatus(403)

@@ -32,19 +32,11 @@ app.get("/", (req, res) => {
   });
 });
 
-// app.post("/login", (req, res) => {
-//   const user = {
-//     id: 1,
-//     name: 'user'
-//   }
-//   // mock user
-//   jwt.sign({ user }, "secretkey", (err, token) => {
-//       res.json({
-//           message: "Auth passed",
-//           token,
-//       });  
-//   });
-// }); 
+// app.post('/post', verifyToken, (req, res) => {
+//   res.json({
+//     message: "post created..."
+//   })
+// })
 
 //verify token
 function verifyToken(req, res, next) {
@@ -55,9 +47,9 @@ function verifyToken(req, res, next) {
   if (typeof bearerHeader !== "undefined") {
     const bearer = bearerHeader.split(" ");
     // Get token from array
-    const bearerToken = bearer;
+    const bearerToken = bearer[1];
     // Set the token
-    req.token = bearerHeader;
+    req.token = bearerToken;
     next();
   } else {
     // Forbidden

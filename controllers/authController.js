@@ -22,6 +22,7 @@ exports.loginGet = asyncHandler(async (req, res, next) => {
 
 exports.loginPost = [
 	// Check username and password fields
+	
 	body("name", "Must enter a username").trim().isLength({ min: 1 }).escape(),
 	body("password", "Must enter a password")
 		.trim()
@@ -41,7 +42,6 @@ exports.loginPost = [
 			}
 
 			const user = await User.findOne({ name: req.body.name });
-			console.log(user, 'this is user')
 
 			if (!user) {
 				return res.json({ message: "Incorrect username or password" });
