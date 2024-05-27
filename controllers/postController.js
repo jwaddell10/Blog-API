@@ -26,17 +26,23 @@ exports.postPost = [
 
 	asyncHandler(async (req, res, next) => {
 		try {
-			const errors = validationResult(req);
-			// if (!errors.isEmpty()) {
-			// 	return res.status(400).json({ errors: errors.array() });
-			// }
-			// console.log(req, "thisi s req body");
-			const token = req.body.JWTToken
-			const decoded = jwt.verify(token, process.env.JWT_SECRET)
-			const userId = decoded.user._id
+			const token = req.body.JWTToken;
+			const decoded = jwt.verify(token, process.env.JWT_SECRET);
+			const userId = decoded.user._id;
+
 			const formattedDate = new Date().toISOString();
 			const user = await User.findById(userId);
-			console.log(user, 'this is user')
+			const postTitle = req.body.formDataObject.title;
+			const postText = req.body.formDataObject.text;
+
+			const createdPost = new Post({
+				title: postTitle,
+				date: formattedDate,
+				text: postText,
+				user: user,
+			});
+
+			await createdPost.save();
 		} catch (error) {
 			console.log(error);
 		}
