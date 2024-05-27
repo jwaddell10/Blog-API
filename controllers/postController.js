@@ -25,6 +25,7 @@ exports.postPost = [
 	body("text").trim().isLength({ min: 1 }).escape(),
 
 	asyncHandler(async (req, res, next) => {
+		// console.log(req, 'this is req')
 		try {
 			const token = req.body.JWTToken;
 			const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -35,11 +36,17 @@ exports.postPost = [
 			const postTitle = req.body.formDataObject.title;
 			const postText = req.body.formDataObject.text;
 
+			const isPublished = req.body.isPublished;
+
+			let visibilityValue =
+				isPublished === "true" ? "Published" : "Not Published";
+
 			const createdPost = new Post({
 				title: postTitle,
 				date: formattedDate,
 				text: postText,
 				user: user,
+				visibility: visibilityValue,
 			});
 
 			await createdPost.save();
