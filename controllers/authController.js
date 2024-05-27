@@ -30,6 +30,7 @@ exports.loginPost = [
 		.escape(),
 
 	asyncHandler(async (req, res, next) => {
+		// console.log(req.headers, 'this is reqheaders')
 		try {
 			const errors = validationResult(req);
 

@@ -20,33 +20,25 @@ exports.postGet = asyncHandler(async (req, res, next) => {
 	}
 });
 
-
 exports.postPost = [
 	body("title").trim().isLength({ min: 1 }).escape(),
 	body("text").trim().isLength({ min: 1 }).escape(),
 
 	asyncHandler(async (req, res, next) => {
-		jwt.verify(req.token, process.env.JWT_SECRET, (err, authData) => {
-			if (err) {
-				res.sendStatus(403)
-			} else {
-				res.json({
-					message: "Post created",
-					authData,
-				});
-			}
-		});
-		// try {
-		// 	const errors = validationResult(req);
-		// 	if (!errors.isEmpty()) {
-		// 		return res.status(400).json({ errors: errors.array() });
-		// 	}
-		// 	console.log(req.body, "thisi s req body");
-		// 	console.log(req, "this is requser");
-		// 	const formattedDate = new Date().toISOString();
-		// 	const user = await User.findById(req.user);
-		// } catch (error) {
-		// 	console.log(error);
-		// }
+		try {
+			const errors = validationResult(req);
+			// if (!errors.isEmpty()) {
+			// 	return res.status(400).json({ errors: errors.array() });
+			// }
+			// console.log(req, "thisi s req body");
+			const token = req.body.JWTToken
+			const decoded = jwt.verify(token, process.env.JWT_SECRET)
+			const userId = decoded.user._id
+			const formattedDate = new Date().toISOString();
+			const user = await User.findById(userId);
+			console.log(user, 'this is user')
+		} catch (error) {
+			console.log(error);
+		}
 	}),
 ];

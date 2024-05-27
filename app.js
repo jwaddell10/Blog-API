@@ -25,19 +25,6 @@ async function main() {
 	console.log("connected");
 }
 
-app.get("/", (req, res) => {
-  console.log('is this working')
-  res.json({
-      message: "Welcome to the API",
-  });
-});
-
-// app.post('/post', verifyToken, (req, res) => {
-//   res.json({
-//     message: "post created..."
-//   })
-// })
-
 //verify token
 function verifyToken(req, res, next) {
   // Get auth header value
