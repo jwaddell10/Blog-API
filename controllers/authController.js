@@ -104,6 +104,7 @@ exports.signupPost = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
+			console.log(errors, 'this is errors')
 			return res.status(400).json({ errors: errors.array() });
 		}
 
@@ -115,7 +116,7 @@ exports.signupPost = [
 				password: hashedPassword,
 			});
 
-			await user.save();
+			// await user.save();
 		} catch (error) {
 			next(error);
 		}
