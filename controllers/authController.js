@@ -22,7 +22,7 @@ exports.loginGet = asyncHandler(async (req, res, next) => {
 
 exports.loginPost = [
 	// Check username and password fields
-	
+
 	body("name", "Must enter a username").trim().isLength({ min: 1 }).escape(),
 	body("password", "Must enter a password")
 		.trim()
@@ -53,17 +53,22 @@ exports.loginPost = [
 				user.password
 			);
 
-			if (isMatch) {
+			if (!isMatch) {
 				return res.json({ message: "Incorrect username or password" });
-			} else if (!isMatch) {
-				jwt.sign({ user }, process.env.JWT_SECRET, (err, token) => {
-					if (err) {
-						console.log(err, "this is err");
+			} else if (isMatch) {
+				jwt.sign(
+					{ user },
+					process.env.JWT_SECRET,
+					{ expiresIn: "1d" },
+					(err, token) => {
+						if (err) {
+							console.log(err, "this is err");
+						}
+						res.json({
+							token,
+						});
 					}
-					res.json({
-						token,
-					});
-				});
+				);
 			}
 		} catch (error) {
 			next(error);
@@ -104,7 +109,7 @@ exports.signupPost = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			console.log(errors, 'this is errors')
+			console.log(errors, "this is errors");
 			return res.status(400).json({ errors: errors.array() });
 		}
 
@@ -116,7 +121,8 @@ exports.signupPost = [
 				password: hashedPassword,
 			});
 
-			// await user.save();
+			await user.save();
+			res.json({ user: user });
 		} catch (error) {
 			next(error);
 		}

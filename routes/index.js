@@ -41,10 +41,7 @@ router.get("/", function (req, res, next) {
 	res.json({ key: "value" });
 });
 
-// router.get("/login", authController.loginGet);
 router.post("/login", authController.loginPost);
-
-// router.get("/logout", authController.logout);
 
 router.get("/signup", authController.signupGet);
 router.post("/signup", authController.signupPost);
