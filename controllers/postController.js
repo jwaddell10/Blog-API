@@ -5,6 +5,7 @@ const Post = require("../models/post");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const asyncHandler = require("express-async-handler");
+const { format } = require("morgan");
 
 exports.postGet = asyncHandler(async (req, res, next) => {
 	try {
@@ -31,7 +32,14 @@ exports.postPost = [
 			const decoded = jwt.verify(token, process.env.JWT_SECRET);
 			const userId = decoded.user._id;
 
-			const formattedDate = new Date().toISOString();
+			const date = new Date();
+
+			const dateOptions = {
+				year: "numeric",
+				month: "long",
+				day: "numeric",
+			};
+			const formattedDate = date.toLocaleDateString("en-US", dateOptions);
 			const user = await User.findById(userId);
 			const postTitle = req.body.formDataObject.title;
 			const postText = req.body.formDataObject.text;
