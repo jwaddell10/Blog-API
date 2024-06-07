@@ -26,7 +26,7 @@ exports.postPost = [
 	body("text").trim().isLength({ min: 1 }).escape(),
 
 	asyncHandler(async (req, res, next) => {
-		// console.log(req, 'this is req')
+		console.log('this is running')
 		try {
 			const token = req.body.JWTToken;
 			const decoded = jwt.verify(token, process.env.JWT_SECRET);
