@@ -19,22 +19,41 @@ const jwt = require("jsonwebtoken");
 //get a single comment
 /* GET home page. */
 
-function authToken(req, res, next) {
-	const token = req.body.JWTToken;
+// function authToken(req, res, next) {
+// 	// const token = req.body.JWTToken;
+//   const token = req.token
 
-	jwt.verify(token, process.env.JWT_SECRET, (err, authData) => {
-		if (err) {
-			return res
-				.status(401)
-				.json({ error: "Unauthorized - Invalid token" });
-		} else {
-			res.json({
-				message: "Post Created",
-				authData,
-			});
-		}
-		next();
-	});
+// 	jwt.verify(req.token, process.env.JWT_SECRET, (err, authData) => {
+// 		if (err) {
+// 			return res
+// 				.status(401)
+// 				.json({ error: "Unauthorized - Invalid token" });
+// 		} else {
+// 			res.json({
+// 				message: "success",
+// 				authData,
+// 			});
+// 		}
+// 		next();
+// 	});
+// }
+
+//verify token
+function verifyToken(req, res, next) {
+  // Get auth header value
+  const bearerHeader = req.headers["authorization"];
+  // Check if bearer is undefined
+  if (typeof bearerHeader !== "undefined") {
+    const bearer = bearerHeader.split(" ");
+    // Get token from array
+    const bearerToken = bearer[1];
+    // Set the token
+    req.token = bearerToken;
+    next();
+  } else {
+    // Forbidden
+    throw new Error("Forbidden");
+  }
 }
 
 router.get("/", function (req, res, next) {
@@ -47,7 +66,9 @@ router.get("/signup", authController.signupGet);
 router.post("/signup", authController.signupPost);
 
 router.get("/post", postController.postGet);
-router.post("/post", authToken, postController.postPost);
+router.post("/post", verifyToken, postController.postPost);
+
+router.put("/post/:postId", verifyToken, postController.postUpdate);
 
 router.get("/users", userController.userGetAll);
 router.get("/users/:userId", userController.userGetOne);

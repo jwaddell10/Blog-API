@@ -25,24 +25,42 @@ async function main() {
 	console.log("connected");
 }
 
-//verify token
-function verifyToken(req, res, next) {
-  // Get auth header value
-  const bearerHeader = req.headers["authorization"];
+// function authToken(req, res, next) {
+// 	// const token = req.body.JWTToken;
+//   const token = req.token
 
-  // Check if bearer is undefined
-  if (typeof bearerHeader !== "undefined") {
-    const bearer = bearerHeader.split(" ");
-    // Get token from array
-    const bearerToken = bearer[1];
-    // Set the token
-    req.token = bearerToken;
-    next();
-  } else {
-    // Forbidden
-    throw new Error("Forbidden");
-  }
-}
+// 	jwt.verify(token, process.env.JWT_SECRET, (err, authData) => {
+// 		if (err) {
+// 			return res
+// 				.status(401)
+// 				.json({ error: "Unauthorized - Invalid token" });
+// 		} else {
+// 			res.json({
+// 				message: "success",
+// 				authData,
+// 			});
+// 		}
+// 		next();
+// 	});
+// }
+
+// //verify token
+// function verifyToken(req, res, next) {
+//   // Get auth header value
+//   const bearerHeader = req.headers["authorization"];
+//   // Check if bearer is undefined
+//   if (typeof bearerHeader !== "undefined") {
+//     const bearer = bearerHeader.split(" ");
+//     // Get token from array
+//     const bearerToken = bearer[1];
+//     // Set the token
+//     req.token = bearerToken;
+//     next();
+//   } else {
+//     // Forbidden
+//     throw new Error("Forbidden");
+//   }
+// }
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -54,6 +72,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cors())
+// app.use(verifyToken)
+// app.use(authToken)
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

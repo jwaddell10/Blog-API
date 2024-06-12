@@ -14,7 +14,7 @@ exports.postGet = asyncHandler(async (req, res, next) => {
 			return res.status(400).json({ errors: errors.array() });
 		}
 		const allPosts = await Post.find({}).populate("user").exec();
-
+		console.log(allPosts, "this is posts");
 		res.json(allPosts);
 	} catch (error) {
 		console.log(error);
@@ -26,7 +26,6 @@ exports.postPost = [
 	body("text").trim().isLength({ min: 1 }).escape(),
 
 	asyncHandler(async (req, res, next) => {
-		console.log('this is running')
 		try {
 			const token = req.body.JWTToken;
 			const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -57,7 +56,38 @@ exports.postPost = [
 				visibility: visibilityValue,
 			});
 
-			await createdPost.save();
+			// await createdPost.save();
+		} catch (error) {
+			console.log(error);
+		}
+	}),
+];
+
+exports.postUpdate = [
+	body("title").trim().isLength({ min: 1 }).escape(),
+	body("text").trim().isLength({ min: 1 }).escape(),
+
+	asyncHandler(async (req, res, next) => {
+		try {
+			const postTitle = req.body.title;
+			const postText = req.body.text;
+			const isPublished = req.body.isPublished;
+			let visibilityValue =
+				isPublished === "true" ? "Published" : "Not Published";
+
+			const updatePost = await Post.findByIdAndUpdate(
+				req.params.postId,
+				{
+					title: postTitle,
+					text: postText,
+					visibility: visibilityValue,
+				},
+				{ runValidators: true, new: true }
+			);
+
+			if (!updatePost) {
+				return res.status(404).json({ error: "Post not found" });
+			}
 		} catch (error) {
 			console.log(error);
 		}
