@@ -70,12 +70,12 @@ router.post("/post", verifyToken, postController.postPost);
 
 router.put("/post/:postId", verifyToken, postController.postUpdate);
 
-router.get("/users", userController.userGetAll);
-router.get("/users/:userId", userController.userGetOne);
+router.get("/user", userController.userGetAll);
+router.get("/user/:userId", userController.userGetOne);
 
-router.get("/comments", commentController.commentGetAll);
-router.get("/comments/:commentId", commentController.commentGetOne);
-router.post("/comments", commentController.commentPost);
-router.delete("/comments/:commentId", commentController.commentDelete);
+router.get("/comment", commentController.commentGetAll);
+router.get("/comment/:commentId", commentController.commentGetOne);
+router.post("/comment", commentController.commentPost);
+router.delete("/comment/:commentId", commentController.commentDelete);
 
 module.exports = router;

@@ -6,17 +6,26 @@ require("dotenv").config();
 const asyncHandler = require("express-async-handler");
 
 exports.commentGetAll = asyncHandler(async (req, res, next) => {
-    res.json("commentGetAll is working")
-})
+	try {
+		const allComments = await Comment.find({})
+			.populate("user")
+			.populate("post")
+			.exec();
+        res.json(allComments)
+	} catch (err) {
+		res.json(err);
+	}
+	res.json("commentGetAll is working");
+});
 
 exports.commentGetOne = asyncHandler(async (req, res, next) => {
-    res.json("commentGetONe is working")
-})
+	res.json("commentGetONe is working");
+});
 
 exports.commentPost = asyncHandler(async (req, res, next) => {
-    res.json("comment post is working")
-})
+	res.json("comment post is working");
+});
 
 exports.commentDelete = asyncHandler(async (req, res, next) => {
-    res.json("comment delete is working")
-})
+	res.json("comment delete is working");
+});
