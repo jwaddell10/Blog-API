@@ -16,6 +16,10 @@ const commentSchema = new Schema({
 		type: String,
 		required: [true, "Comment must have text"],
 	},
+	post: {
+		type: Schema.Types.ObjectId,
+		ref: "Post",
+	},
 });
 
 commentSchema.virtual("date_formatted").get(function () {
