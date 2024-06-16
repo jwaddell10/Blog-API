@@ -11,11 +11,10 @@ exports.commentGetAll = asyncHandler(async (req, res, next) => {
 			.populate("user")
 			.populate("post")
 			.exec();
-        res.json(allComments)
+		res.json(allComments);
 	} catch (err) {
 		res.json(err);
 	}
-	res.json("commentGetAll is working");
 });
 
 exports.commentGetOne = asyncHandler(async (req, res, next) => {
@@ -23,7 +22,7 @@ exports.commentGetOne = asyncHandler(async (req, res, next) => {
 });
 
 exports.commentPost = asyncHandler(async (req, res, next) => {
-	res.json("comment post is working");
+	console.log(req.body, "this is req");
 });
 
 exports.commentDelete = asyncHandler(async (req, res, next) => {

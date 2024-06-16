@@ -26,6 +26,11 @@ const postSchema = new Schema({
 		default: "Not Published",
 		required: true,
 	},
+	comment: {
+		type: Schema.Types.ObjectId,
+		ref: "Comment",
+		required: true,
+	}
 });
 
 postSchema.virtual("date_formatted").get(function () {

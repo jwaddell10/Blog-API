@@ -68,7 +68,8 @@ router.post("/signup", authController.signupPost);
 router.get("/post", postController.postGet);
 router.post("/post", verifyToken, postController.postPost);
 
-router.put("/post/:postId", verifyToken, postController.postUpdate);
+// router.put("/post/:postId", verifyToken, postController.postUpdate);
+router.get("/post/:id", postController.postGetOne);
 
 router.get("/user", userController.userGetAll);
 router.get("/user/:userId", userController.userGetOne);

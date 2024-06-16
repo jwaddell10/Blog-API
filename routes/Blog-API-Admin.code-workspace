@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../../Blog-API-Admin"
+		},
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../Members-Only"
+		},
+		{
+			"path": "../../Inventory-Application"
+		}
+	],
+	"settings": {}
+}

@@ -14,12 +14,22 @@ exports.postGet = asyncHandler(async (req, res, next) => {
 			return res.status(400).json({ errors: errors.array() });
 		}
 		const allPosts = await Post.find({}).populate("user").exec();
-		console.log(allPosts, "this is posts");
 		res.json(allPosts);
 	} catch (error) {
 		console.log(error);
 	}
 });
+
+exports.postGetOne = asyncHandler(async (req, res, next) => {
+	try {
+		const id = req.params.id
+		const post = await Post.findById(id).populate("user").populate("comment").exec();
+		console.log(post, 'this is post getone')
+		res.json(post)
+	} catch(error) {
+		console.log(error)
+	}
+})
 
 exports.postPost = [
 	body("title").trim().isLength({ min: 1 }).escape(),
@@ -56,7 +66,7 @@ exports.postPost = [
 				visibility: visibilityValue,
 			});
 
-			// await createdPost.save();
+			await createdPost.save();
 		} catch (error) {
 			console.log(error);
 		}
