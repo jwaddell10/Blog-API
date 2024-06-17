@@ -40,20 +40,20 @@ const jwt = require("jsonwebtoken");
 
 //verify token
 function verifyToken(req, res, next) {
-  // Get auth header value
-  const bearerHeader = req.headers["authorization"];
-  // Check if bearer is undefined
-  if (typeof bearerHeader !== "undefined") {
-    const bearer = bearerHeader.split(" ");
-    // Get token from array
-    const bearerToken = bearer[1];
-    // Set the token
-    req.token = bearerToken;
-    next();
-  } else {
-    // Forbidden
-    throw new Error("Forbidden");
-  }
+	// Get auth header value
+	const bearerHeader = req.headers["authorization"];
+	// Check if bearer is undefined
+	if (bearerHeader !== "null") {
+		const bearer = bearerHeader.split(" ");
+		// Get token from array
+		const bearerToken = bearer[1];
+		// Set the token
+		req.token = bearerToken;
+		next();
+	} else {
+		res.status(500).res.json("error");
+		throw new Error("Forbidden");
+	}
 }
 
 router.get("/", function (req, res, next) {
@@ -76,7 +76,7 @@ router.get("/user/:userId", userController.userGetOne);
 
 router.get("/comment", commentController.commentGetAll);
 router.get("/comment/:commentId", commentController.commentGetOne);
-router.post("/comment", commentController.commentPost);
+router.post("/comment", verifyToken, commentController.commentPost);
 router.delete("/comment/:commentId", commentController.commentDelete);
 
 module.exports = router;
