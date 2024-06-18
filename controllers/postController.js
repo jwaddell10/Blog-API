@@ -24,7 +24,6 @@ exports.postGetOne = asyncHandler(async (req, res, next) => {
 	try {
 		const id = req.params.id
 		const post = await Post.findById(id).populate("user").populate("comment").exec();
-		console.log(post, 'this is post getone')
 		res.json(post)
 	} catch(error) {
 		console.log(error)
@@ -103,3 +102,12 @@ exports.postUpdate = [
 		}
 	}),
 ];
+
+exports.postDelete = asyncHandler(async (req, res, next) => {
+	try {
+		const postToDelete = await Post.findByIdAndDelete(req.params.id)
+		res.redirect("/post")
+	} catch(error) {
+		res.json(error);
+	}
+})

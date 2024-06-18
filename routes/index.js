@@ -67,6 +67,7 @@ router.post("/signup", authController.signupPost);
 
 router.get("/post", postController.postGet);
 router.post("/post", verifyToken, postController.postPost);
+router.delete("/post/:id", verifyToken, postController.postDelete);
 
 // router.put("/post/:postId", verifyToken, postController.postUpdate);
 router.get("/post/:id", postController.postGetOne);
