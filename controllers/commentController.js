@@ -29,14 +29,14 @@ exports.commentPost = [
 		.escape(),
 
 	asyncHandler(async (req, res, next) => {
-		const token = req.headers["authorization"];
-		// console.log(jwt.verify(token, process.env.JWT_SECRET), 'this is jwtverify')
 		try {
+			const token = req.headers["authorization"];
 			const decoded = jwt.verify(token, process.env.JWT_SECRET)
 			const user = await User.findById(decoded.user._id)
+			const post = await Post.findById(req.params.id)
 			const formDataObject = req.body.formDataObject
 			const date = new Date();
-			// console.log(req.body, 'this is reqbody')
+
 			const dateOptions = {
 				year: "numeric",
 				month: "long",
@@ -46,9 +46,9 @@ exports.commentPost = [
 			const createdComment = new Comment({
 				user: user,
 				date: date,
-				text: formDataObject.text
+				text: formDataObject.text,
+				post: post,
 			})
-			// console.log(createdComment, 'thisis createdcomment')
 
 			await createdComment.save()
 		} catch(err) {

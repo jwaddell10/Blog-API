@@ -75,9 +75,9 @@ router.get("/post/:id", postController.postGetOne);
 router.get("/user", userController.userGetAll);
 router.get("/user/:userId", userController.userGetOne);
 
-router.get("/comment", commentController.commentGetAll);
+router.get("/:id/comment", commentController.commentGetAll);
 router.get("/comment/:commentId", commentController.commentGetOne);
-router.post("/comment", verifyToken, commentController.commentPost);
+router.post("/:id/comment", verifyToken, commentController.commentPost);
 router.delete("/comment/:commentId", commentController.commentDelete);
 
 module.exports = router;

@@ -105,8 +105,7 @@ exports.postUpdate = [
 
 exports.postDelete = asyncHandler(async (req, res, next) => {
 	try {
-		const postToDelete = await Post.findByIdAndDelete(req.params.id)
-		res.redirect("/post")
+		const postToDelete = await Post.findByIdAndDelete(req.params.id);
 	} catch(error) {
 		res.json(error);
 	}
