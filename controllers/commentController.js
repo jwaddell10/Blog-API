@@ -8,10 +8,13 @@ const asyncHandler = require("express-async-handler");
 
 exports.commentGetAll = asyncHandler(async (req, res, next) => {
 	try {
-		const allComments = await Comment.find({})
+		console.log(req.params, 'thisis reqparams')
+		const allComments = await Comment.findById(req.params.id)
 			.populate("user")
 			.populate("post")
 			.exec();
+
+			console.log(allComments, 'thisi sallcomments')
 		res.json(allComments);
 	} catch (err) {
 		res.json(err);
@@ -31,10 +34,10 @@ exports.commentPost = [
 	asyncHandler(async (req, res, next) => {
 		try {
 			const token = req.headers["authorization"];
-			const decoded = jwt.verify(token, process.env.JWT_SECRET)
-			const user = await User.findById(decoded.user._id)
-			const post = await Post.findById(req.params.id)
-			const formDataObject = req.body.formDataObject
+			const decoded = jwt.verify(token, process.env.JWT_SECRET);
+			const user = await User.findById(decoded.user._id);
+			const post = await Post.findById(req.params.id);
+			const formDataObject = req.body.formDataObject;
 			const date = new Date();
 
 			const dateOptions = {
@@ -48,17 +51,24 @@ exports.commentPost = [
 				date: date,
 				text: formDataObject.text,
 				post: post,
-			})
-
-			await createdComment.save()
-		} catch(err) {
-			console.log(error, 'this is error')
+			});
+			
+			await createdComment.save();
+			res.json("Comment created")
+		} catch (err) {
+			console.log(error, "this is error");
 		}
-		//find the user, create comment and save comment
-		// const user = await User.findById
 	}),
 ];
 
 exports.commentDelete = asyncHandler(async (req, res, next) => {
-	res.json("comment delete is working");
+	try {
+		const commentToDelete = await Comment.findByIdAndDelete(
+			req.params.commentId
+		);
+
+		res.json(commentToDelete)
+	} catch (error) {
+		res.json(error);
+	}
 });

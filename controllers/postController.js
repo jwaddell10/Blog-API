@@ -64,6 +64,7 @@ exports.postPost = [
 				user: user,
 				visibility: visibilityValue,
 			});
+			console.log(createdPost, 'this post was created')
 
 			await createdPost.save();
 		} catch (error) {
@@ -106,6 +107,7 @@ exports.postUpdate = [
 exports.postDelete = asyncHandler(async (req, res, next) => {
 	try {
 		const postToDelete = await Post.findByIdAndDelete(req.params.id);
+		res.status(200).json(postToDelete)
 	} catch(error) {
 		res.json(error);
 	}

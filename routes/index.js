@@ -19,25 +19,6 @@ const jwt = require("jsonwebtoken");
 //get a single comment
 /* GET home page. */
 
-// function authToken(req, res, next) {
-// 	// const token = req.body.JWTToken;
-//   const token = req.token
-
-// 	jwt.verify(req.token, process.env.JWT_SECRET, (err, authData) => {
-// 		if (err) {
-// 			return res
-// 				.status(401)
-// 				.json({ error: "Unauthorized - Invalid token" });
-// 		} else {
-// 			res.json({
-// 				message: "success",
-// 				authData,
-// 			});
-// 		}
-// 		next();
-// 	});
-// }
-
 //verify token
 function verifyToken(req, res, next) {
 	// Get auth header value
@@ -78,6 +59,6 @@ router.get("/user/:userId", userController.userGetOne);
 router.get("/:id/comment", commentController.commentGetAll);
 router.get("/comment/:commentId", commentController.commentGetOne);
 router.post("/:id/comment", verifyToken, commentController.commentPost);
-router.delete("/comment/:commentId", commentController.commentDelete);
+router.delete("/comment/:commentId", verifyToken, commentController.commentDelete);
 
 module.exports = router;
