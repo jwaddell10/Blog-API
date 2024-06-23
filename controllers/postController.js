@@ -49,6 +49,7 @@ exports.postPost = [
 			};
 			const formattedDate = date.toLocaleDateString("en-US", dateOptions);
 			const user = await User.findById(userId);
+			const comment = await Comment.findById(req.params.id);
 			const postTitle = req.body.formDataObject.title;
 			const postText = req.body.formDataObject.text;
 
@@ -63,8 +64,8 @@ exports.postPost = [
 				text: postText,
 				user: user,
 				visibility: visibilityValue,
+				comment: comment,
 			});
-			console.log(createdPost, 'this post was created')
 
 			await createdPost.save();
 		} catch (error) {

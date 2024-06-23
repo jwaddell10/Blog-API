@@ -5,17 +5,18 @@ const User = require("../models/user");
 const Post = require("../models/post");
 require("dotenv").config();
 const asyncHandler = require("express-async-handler");
+const post = require("../models/post");
 
 exports.commentGetAll = asyncHandler(async (req, res, next) => {
 	try {
-		console.log(req.params, 'thisis reqparams')
-		const allComments = await Comment.findById(req.params.id)
-			.populate("user")
+		const id = req.params.id
+		const comment = await Comment.find({ post: id})
 			.populate("post")
+			.populate("user")
 			.exec();
 
-			console.log(allComments, 'thisi sallcomments')
-		res.json(allComments);
+		console.log(comment, 'this is comment')
+		res.json(comment);
 	} catch (err) {
 		res.json(err);
 	}
@@ -52,10 +53,10 @@ exports.commentPost = [
 				text: formDataObject.text,
 				post: post,
 			});
-			
+		
 			await createdComment.save();
 			res.json("Comment created")
-		} catch (err) {
+		} catch (error) {
 			console.log(error, "this is error");
 		}
 	}),
